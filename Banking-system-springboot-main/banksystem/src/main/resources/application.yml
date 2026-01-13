@@ -1,0 +1,29 @@
+spring:
+  application:
+    name: banksystem
+
+  datasource:
+    url: jdbc:mysql://localhost:3306/bank_system
+    username: root
+    password: "@Mysql_01"
+    driver-class-name: com.mysql.cj.jdbc.Driver
+
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+    show-sql: true
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQLDialect
+        format_sql: true
+    defer-datasource-initialization: true
+    open-in-view: false  # IMPORTANT: This prevents lazy loading issues
+
+  sql:
+    init:
+      mode: always
+      data-locations: classpath:data.sql
+
+  # Cache configuration
+  cache:
+    type: simple
