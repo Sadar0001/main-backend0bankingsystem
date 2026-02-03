@@ -3,27 +3,38 @@ spring:
     name: banksystem
 
   datasource:
-    url: jdbc:mysql://localhost:3306/bank_system
-    username: root
-    password: "@Mysql_01"
+    # Aiven MySQL URL (SSL Required)
+    url: jdbc:mysql://mysql-13116c6c-banking-system-database.e.aivencloud.com:17788/defaultdb?sslMode=REQUIRED
+    username: avnadmin
+    # This instructs Spring to look for an Environment Variable named 'DB_PASSWORD'
+    password: ${DB_PASSWORD}
     driver-class-name: com.mysql.cj.jdbc.Driver
 
   jpa:
     hibernate:
-      ddl-auto: create-drop
+      # 'update' keeps your data safe in the cloud. 'create-drop' would delete it on every restart.
+      ddl-auto: update
     show-sql: true
     properties:
       hibernate:
-        dialect: org.hibernate.dialect.MySQLDialect
+        dialect: org.hibernate.dialect.MySQL8Dialect
         format_sql: true
     defer-datasource-initialization: true
-    open-in-view: false  # IMPORTANT: This prevents lazy loading issues
+    open-in-view: false
 
   sql:
     init:
+      # 'always' runs data.sql on startup. If data already exists, this might fail unless handled.
+      # Change to 'never' if you want to stop re-initializing data in production.
       mode: always
       data-locations: classpath:data.sql
 
   # Cache configuration
   cache:
     type: simple
+
+# Custom property for CORS (Frontend Connection)
+# You will set this in Render later to match your Vercel URL
+app:
+  frontend:
+    url: ${FRONTEND_URL:http://localhost:5173} # Defaults to localhost if not set
