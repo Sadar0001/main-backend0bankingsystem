@@ -72,16 +72,25 @@ public class SecurityConfig {
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
 
-        // React ka URL allow karo
-        configuration.setAllowedOrigins(List.of("http://localhost:5173"));
+        // ---------------- CHANGE HERE ----------------
+        // Purana: configuration.setAllowedOrigins(List.of("http://localhost:5173"));
 
-        // Sabhi methods allow karo (GET, POST, PUT, DELETE, OPTIONS)
-        configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+        // Naya: Sabhi origins allow karne ke liye Pattern use karein
+        // Jab allowCredentials(true) hota hai, tab "*" allowedOrigins me nahi chalta,
+        // isliye allowedOriginPatterns("*") use karna padta hai.
+        configuration.setAllowedOriginPatterns(List.of("*"));
+        // ---------------------------------------------
 
-        // Headers allow karo
-        configuration.setAllowedHeaders(Arrays.asList("Authorization", "Content-Type"));
+        // Sabhi methods allow karein
+        configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"));
 
-        // Credentials allow karo (zaruri hai agar token bhej rahe ho)
+        // Sabhi headers allow karein
+        configuration.setAllowedHeaders(Arrays.asList("Authorization", "Content-Type", "X-Requested-With", "Accept", "Origin", "Access-Control-Request-Method", "Access-Control-Request-Headers"));
+
+        // Agar frontend ko response headers read karne hain
+        configuration.setExposedHeaders(Arrays.asList("Authorization"));
+
+        // Credentials (Cookies/Token) allow karein
         configuration.setAllowCredentials(true);
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
